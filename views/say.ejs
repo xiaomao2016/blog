@@ -1,0 +1,78 @@
+<script type="text/javascript" src="/javascripts/bootstrap-select.min.js"></script>
+<link rel="stylesheet" type="text/css" href="/stylesheets/bootstrap-select.min.css">
+<link rel="stylesheet" href="/kindeditor/default/default.css"/>
+<script charset="utf-8" src="/kindeditor/kindeditor-min.js"></script>
+<script charset="utf-8" src="/kindeditor/zh_CN.js"></script>
+<script>
+    var editor;
+    KindEditor.ready(function (K) {
+        editor = K.create('textarea[name="post"]', {
+            resizeType: 1,
+            allowPreviewEmoticons: false,
+            allowImageUpload: false,
+            items: [
+                'fontname', 'fontsize', '|', 'forecolor', 'hilitecolor', 'bold', 'italic', 'underline',
+                'removeformat', '|', 'justifyleft', 'justifycenter', 'justifyright', 'insertorderedlist',
+                'insertunorderedlist', '|', 'emoticons', 'image', 'link']
+        });
+    });
+</script>
+
+<div class="row" style="margin-top:10px;">
+    <% if(flag && flag==2){ %>
+    <ul class="breadcrumb">
+        <li><a href="/">首页</a></li>
+        <li><a href="/categoryShow?categoryid=<%=categoryid %>&categoryname=<%=categoryname %>"><%=categoryname %></a></li>
+        <li class="active">发帖</li>
+    </ul>
+    <% }else { %>
+    <ul class="breadcrumb">
+        <li><a href="/">首页</a></li>
+        <li><a href="/allPosts">帖子汇总</a></li>
+        <li class="active">发帖</li>
+    </ul>
+    <% } %>
+    <form method="post" action="/post">
+        <div class="col-md-9">
+            <div class="form-inline" style="margin-bottom:10px;">
+                <div class="form-group">
+                    <select class="form-control" name="category" id="category">
+                        <% categories.forEach(function(category){ %>
+                        <% if(categoryid == category.cid){ %>
+                        <option selected="selected" value='<%= category.cid %>'><%= category.cname %></option>
+                        <% }else{ %>
+                        <option value='<%= category.cid %>'><%= category.cname %></option>
+                        <% } %>
+
+                        <% }) %>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <input type="radio" name="optionsRadios" id="optionsRadios1" value="1" checked>
+                    转载
+                    <input type="radio" name="optionsRadios" id="optionsRadios2" value="2">
+                    原创
+                </div>
+                <div class="form-group">
+                    <input type="text" name="title" class="form-control" placeholder="请输入标题">
+                </div>
+            </div>
+            <input id="categoryname" name="categoryname" type="hidden">
+            <% if(categoryid){ %>
+            <input id="flag" name="flag" type="hidden" value=2>
+            <% }else{ %>
+            <input id="flag" name="flag" type="hidden" value=1>
+            <% } %>
+            <textarea name="post" style="width:100%;height:400px;visibility:hidden;"></textarea>
+            <button type="submit" class="btn btn-success pull-right" style="margin-top:20px;"><i
+                        class="icon-comment icon-write"></i> 发贴
+            </button>
+        </div>
+    </form>
+</div>
+
+<script>
+    var categoryselect = document.getElementById("category");
+
+    document.getElementById("categoryname").value = categoryselect.options[categoryselect.selectedIndex].text;
+</script>

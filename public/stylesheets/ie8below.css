@@ -1,0 +1,25 @@
+body{
+    font-family:myFont, "微软雅黑", verdana, "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+@font-face
+{
+    font-family: myFont;
+    src:url('../font/SentyMarukoElementary.eot');
+}
+@font-face
+{
+    font-family: emoji;
+    src:url('../font/Symbola.eot');
+}
+input{
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    -khtml-border-radius: 4px;
+    border-radius: 4px;
+    behavior:url('/PIE-2.0beta1/PIE.htc');
+}
+.placeholder
+{
+    color: #aaa;
+}

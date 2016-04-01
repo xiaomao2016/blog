@@ -1,0 +1,23 @@
+<div>
+    <ul class="pagination">
+        <% if((page-1)!=0){ %>
+        <li><a title="上一页" href="?p=<%= page-1 %>&categoryid=<%= categoryid%>&categoryname=<%= categoryname%>">上一页</a></li>
+        <% } else { %>
+        <li class="disabled"><a title="上一页" href="javascript:void(0);">上一页</a></li>
+        <% } %>
+        <% for(var i=0;i<totals/15;i++) {
+                if((i+1)==page) {  %>
+        <li class="active"><a href="?p=<%= i+1 %>&categoryid=<%= categoryid%>&categoryname=<%= categoryname%>"><%= i+1 %></a></li>
+
+        <% } else { %>
+
+        <li><a href="?p=<%= i+1 %>&categoryid=<%= categoryid%>&categoryname=<%= categoryname%>"><%= i+1 %></a></li>
+        <%  } %>
+        <%  } %>
+        <% if(((page-1)*15+posts.length)!=totals){ %>
+        <li><a title="下一页" href="?p=<%= page+1 %>&categoryid=<%= categoryid%>&categoryname=<%= categoryname%>">下一页</a></li>
+        <% } else { %>
+        <li class="disabled"><a title="下一页" href="javascript:void(0);">下一页</a></li>
+        <% } %>
+    </ul>
+</div>

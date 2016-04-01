@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title><%= title %> - 筱站</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="keywords" content="筱站，博客">
+    <meta name="description" content="筱站，博客">
+    <meta name="author" content="yuhongxiao">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel='stylesheet' href='/bootstrap/css/bootstrap.min.css'/>
+    <!-- 首页弹出框css   -->
+    <link rel='stylesheet' href='/alertTip/alertTip.css'/>
+    <link rel='stylesheet' href='/stylesheets/common.css'/>
+    <script src="/javascripts/jquery.js"></script>
+    <!-- 异步加载字体   -->
+    <!--<script src="/javascripts/loadFont.js"></script>-->
+    <!-- 首页弹出框   显示一次 -->
+    <script src="/alertTip/alertTip.js"></script>
+
+    <!--[if lt IE 9]>
+    <script src="/javascripts/html5placeholder.js"></script>
+
+    <script src="/javascripts/html5shiv.js"></script>
+    <script src="/javascripts/respond.min.js"></script>
+    <% /*
+    <script src="/javascripts/html5shiv.js"></script>
+    <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>   */ %>
+    <![endif]-->
+</head>
+<body onload="checkCookie()">
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="row">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" id="aTitle" href="/">X<sup>筱站</sup></a>
+            </div>
+            <div class="navbar-collapse collapse" style="padding-right: 0px;">
+                <ul class="nav navbar-nav">
+                    <li><a class="label label-info" href="/wishingWall">许愿墙</a></li>
+                    <li><a class="label label-success" href="/sounds">sounds</a></li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">关于本站 <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="/introduction">简介</a></li>
+                            <li><a href="/linkOurs">联系我们</a></li>
+                            <li><a href="/adService">广告服务</a></li>
+                            <li class="divider"></li>
+                            <li><a href="/copyright">版权声明</a></li>
+                        </ul>
+                    </li>
+                </ul>
+
+                <% if (!user){ %>
+                <form class="navbar-form navbar-right" method="post" action="/login" style="padding-right: 0px;">
+                    <div class="form-group">
+                        <label class="sr-only" for="username">Username</label>
+                        <input type="text" name="username" id="username" class="form-control input-sm"
+                               placeholder="Enter Username:">
+                    </div>
+                    <div class="form-group">
+                        <label class="sr-only" for="password">Username</label>
+                        <input type="text" name="fake_pass" id="fake_pass" value="Enter Password:"
+                               class="form-control input-sm"
+                               style="display:none;color: #aaa;"/>
+                        <input type="password" id="real_pass" name="password" class="form-control input-sm"
+                               placeholder="Enter Password:">
+                    </div>
+                    <button type="submit" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-heart"></span>
+                        登入
+                    </button>
+                    <a class="btn btn-default btn-sm" href="/reg"><span class="glyphicon glyphicon-plus-sign"></span> 注册</a>
+                </form>
+                <% }else{ %>
+                <ul class="nav navbar-nav navbar-right" style="padding-right: 0px;">
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" id="dLabel" role="button" data-toggle="dropdown" data-target="#"
+                           href="javascript:void(0);"><%= user.name %></a>
+                        <ul class="dropdown-menu" style="margin-top: -10px;">
+                            <li><a href="/myHome"><span class="glyphicon glyphicon-home"></span> 我的空间</a></li>
+                            <li><a href="#"><span class="glyphicon glyphicon-off"></span> Delete</a></li>
+                            <li><a href="#"><span class="glyphicon glyphicon-off"></span> Ban</a></li>
+                            <li class="divider"></li>
+                            <li><a href="/headPortraitUpload"><span class="glyphicon glyphicon-off"></span> 个人设置</a>
+                            </li>
+                            <li><a href="/logout"><span class="glyphicon glyphicon-off"></span> 登出</a></li>
+                        </ul>
+                </ul>
+                <% } %>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="container" class="container">
+    <% if (success) { %>
+    <div class="alert alert-success">
+        <%= locals.success %>
+    </div>
+    <% } %>
+    <% if (error) { %>
+    <div class="alert alert-danger">
+        <%= locals.error %>
+    </div>
+    <% } %>
+    <%- body %>
+    <div class="clearfix"></div>
+    <blockquote class="pull-right" style="margin-top:10px;">
+        <p>你 一会看我 一会看云 我觉得 你看我时很远 你看云时很近</p>
+        <small><cite title="哀思">2013年8月22日</cite></small>
+    </blockquote>
+    <div class="clearfix"></div>
+    <hr/>
+    <footer>
+        <p style="float: left;"><a href="/">Marvell</a> 2013</p>
+        <!-- Baidu Button BEGIN -->
+        <div id="bdshare" class="bdshare_t bds_tools get-codes-bdshare" style="float: right;">
+            <span class="bds_more">分享到：</span>
+            <a class="bds_qzone"></a>
+            <a class="bds_tsina"></a>
+            <a class="bds_tqq"></a>
+            <a class="bds_renren"></a>
+            <a class="bds_t163"></a>
+            <a class="shareCount"></a>
+        </div>
+        <script type="text/javascript" id="bdshare_js" data="type=tools&amp;uid=6867291"></script>
+        <script type="text/javascript" id="bdshell_js"></script>
+        <script type="text/javascript">
+            document.getElementById("bdshell_js").src = "http://bdimg.share.baidu.com/static/js/shell_v2.js?cdnversion=" + Math.ceil(new Date() / 3600000)
+        </script>
+        <!-- Baidu Button END -->
+    </footer>
+</div>
+<script src="/javascripts/resizeImage.js"></script>
+<script>
+    $('img').resizeimage();
+</script>
+<script src="/bootstrap/js/bootstrap.min.js"></script>
+</body>
+<!--[if IE 6]>
+<script src="//letskillie6.googlecode.com/svn/trunk/2/zhCN.js"></script>
+<![endif]-->
+</html>

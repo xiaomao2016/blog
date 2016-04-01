@@ -1,0 +1,122 @@
+<!--<html>-->
+<style>
+.imgContainer {
+    border: 1px solid #ddd;
+    box-shadow: 0 1px 5px #CCC;
+}
+  .img_b, .img_m, .img_s {
+    float: left;
+    text-align: center;
+    color: #666;
+    font-size: 12px;
+}
+
+.left {
+    float: left;
+    width: 250px;
+    height: 250px;
+    overflow: hidden;
+    border: 1px solid #ddd;
+    margin-right: 40px;
+    background: #f5f5f5;
+    text-align: center;
+}
+
+.right {
+    float: left;
+    width: 320px;
+    height: 270px;
+    border-left: 1px #ddd solid;
+    padding-left: 40px;
+}
+
+.fixed {
+    display: block;
+}
+
+.img {
+    border: 1px solid #ddd;
+    margin-bottom: 10px;
+    overflow: hidden;
+}
+
+.img_b .img {
+    width: 150px;
+    height: 150px;
+}
+
+.img_m .img {
+    width: 100px;
+    height: 100px;
+}
+
+.img_s .img {
+    width: 50px;
+    height: 50px;
+}
+
+.img_b {
+    padding-top: 40px;
+}
+
+.img_m {
+    padding-left: 40px;
+    padding-top: 40px;
+    margin-bottom: 10px;
+}
+
+.img_s {
+    padding-left: 48px;
+    padding-top: 5px;
+}
+
+.imgSetting {
+    width: 660px;
+    padding: 30px 50px 0px 70px;
+    overflow: hidden;
+    margin: 0px auto;
+}
+
+.ellipsis {
+    margin: 20px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+#choosebox {
+    padding: 5px;
+    margin-left: 170px;
+    width: 150px;
+    border: 1px solid #ccc;
+    background: #E5E5E5;
+    cursor: pointer;
+}
+</style>
+<div class="imgContainer">
+  <div class="imgSetting">
+    <div class="left">
+      <img src="images/user/<%= files[0] %>"/>
+    </div>
+    <div class="right fixed">
+      <div class="img_b">
+        <div class="img"><img src="images/user/<%= files[1] %>"/></div>150X150像素
+      </div>
+      <div class="img_m">
+        <div class="img"><img src="images/user/<%= files[2] %>"/></div>75X75像素
+      </div>
+      <div class="img_s">
+        <div class="img"><img src="images/user/<%= files[3] %>"/></div>50X50像素
+      </div>
+    </div>
+  </div>
+  <div id="choosebox" class="ellipsis">点击选择图片</div>
+  <form  id="image_form" action="/imgUpload" method="post" style="padding-left: 180px;" enctype="multipart/form-data">
+    <input class="hide" type="file" id="file" name="img" />
+    <button class="btn" id="upload" >上传头像</button>
+    <span id="imgerr"></span><img class="hide" id="imgload" height="14px" width="14px" src="/images/loading.gif">
+  </form>
+</div>
+<script src="/javascripts/jquery.js"></script>
+<script src="/ajaxform/ajaxform.js"></script>
+<script src="/javascripts/fileupload.js"></script>

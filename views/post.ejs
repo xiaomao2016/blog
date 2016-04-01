@@ -1,0 +1,39 @@
+<div class="row">
+    <ul class="breadcrumb">
+        <li><a href="/">首页</a></li>
+<% if(flag && flag==2){ %>
+    <li><a href="/categoryShow?categoryid=<%=categoryid %>&categoryname=<%=categoryname %>"><%=categoryname %></a></li>
+<% }else if(flag && flag==3){ %>
+    <li><a href="/myHome">My Room</a></li>
+<% }else { %>
+    <li><a href="/allPosts">帖子汇总</a></li>
+<% } %>
+      <li class="active"><%= post.title %></li>
+  </ul>
+ <div id="postContent" style="margin-bottom:10px;" class="col-md-9">
+ <table style="margin-top:10px;table-layout:fixed;width:100%;">
+  	<tr style="vertical-align:top" >
+  		<td style="width:20%;"><a href="/u/<%= post.user.name %>"><%= post.user.name %></a><br><img src="/images/user/<%= post.user.imgPath %>" style="width:100px;height:100px" /></td>
+  		<td style="width:80%;">
+  			<p>
+                <% if(!post.postType || post.postType==1){ %>
+                <span class="label label-default">转</span>
+                <% }else{ %>
+                <span class="label label-danger">原</span>
+                <% } %>
+                <span id="postTitle"><%= post.title %></span>
+            </p>
+  		 	<p style="border-bottom:1px dashed silver;"><small><%= post.time %></small><br></p>
+    		<p><%= post.post %></p>
+  		</td>
+  	</tr>
+  </table>
+
+  <script type="text/javascript">
+  var getValue=document.getElementById("postContent").innerHTML;
+  var decodeValue=getValue.replace(/&quot;/g,"\"").replace(/&lt;/g,"<").replace(/&gt;/g,">").replace(/&amp;/g, "&");
+  document.getElementById("postContent").innerHTML=decodeValue;
+  </script>
+ <%- include comment %>
+ </div>
+</div>

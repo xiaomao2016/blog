@@ -1,0 +1,7 @@
+.bottom_pop_window {float: right;position: fixed;bottom: 10px;right: 10px;width: 300px;
+    height: 166px; border:1px solid #d1d2d4; padding:1px;background: #FFF;}
+.bottom_pop_window .title { background:#428BCA;  color:#FFF; padding:2px 6px; font-weight:bold; }
+.bottom_pop_window .title a.close { text-align:right; font-size:12px; padding:4px 6px; color:#FFF; }
+.bottom_pop_window #popContent { width: 300px;  overflow:hidden; height:140px;}
+* html .bottom_pop_window{position: absolute;
+    top: expression(offsetParent.scrollTop+document.documentElement.clientHeight-this.offsetHeight);}

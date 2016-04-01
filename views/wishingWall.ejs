@@ -1,0 +1,331 @@
+<script language="javascript" type="text/javascript">
+
+/* var obj;//引发事件对象
+var IsDrag = false;   //是否抓起
+var x, y;   //鼠标与控件的相对坐标
+function down(e){
+	if(e.target.id=='gogo'){
+		obj=document.getElementById('gogo');
+	}else{
+		return;
+	}
+	if(obj.setCapture)
+	{
+		obj.setCapture();
+	}else if (window.captureEvents) {
+        window.captureEvents(Event.MOUSEMOVE | Event.MOUSEUP);
+    }
+    x=e.screenX;
+    y=e.screenY;
+    obj.style.position="absolute";
+    IsDrag=true;
+    e.preventDefault();
+}
+function move(e){
+	e.preventDefault();
+	if(IsDrag){
+		obj.style.top=(e.screenY-y)+"px";
+		obj.style.left=(e.screenX-x)+"px";
+	}
+}
+function up(e){
+	if(obj.releaseCapture){
+		obj.releaseCapture();
+	}else if (window.captureEvents) {
+        window.captureEvents(Event.MOUSEMOVE | Event.MOUSEUP);
+    }
+    IsDrag = false;
+    obj.style.position='';
+    obj.onmousemove=null;
+    obj.onmouseup=null;
+} */
+
+var zindex=0;//设置点击元素的zindex
+var isIE = (document.all) ? true : false;
+
+var $ = function (id) {
+	return "string" == typeof id ? document.getElementById(id) : id;
+};
+
+var Class = {
+	create: function() {
+		return function() { this.initialize.apply(this, arguments); }
+	}
+}
+
+var Extend = function(destination, source) {
+	for (var property in source) {
+		destination[property] = source[property];
+	}
+}
+
+var Bind = function(object, fun) {
+	return function() {
+		return fun.apply(object, arguments);
+	}
+}
+
+var BindAsEventListener = function(object, fun) {
+	return function(event) {
+		return fun.call(object, (event || window.event));
+	}
+}
+
+var CurrentStyle = function(element){
+	return element.currentStyle || document.defaultView.getComputedStyle(element, null);
+}
+
+function addEventHandler(oTarget, sEventType, fnHandler) {
+	if (oTarget.addEventListener) {
+		oTarget.addEventListener(sEventType, fnHandler, false);
+	} else if (oTarget.attachEvent) {
+		oTarget.attachEvent("on" + sEventType, fnHandler);
+	} else {
+		oTarget["on" + sEventType] = fnHandler;
+	}
+};
+
+function removeEventHandler(oTarget, sEventType, fnHandler) {
+    if (oTarget.removeEventListener) {
+        oTarget.removeEventListener(sEventType, fnHandler, false);
+    } else if (oTarget.detachEvent) {
+        oTarget.detachEvent("on" + sEventType, fnHandler);
+    } else { 
+        oTarget["on" + sEventType] = null;
+    }
+};
+
+//拖放程序
+var Drag = Class.create();
+Drag.prototype = {
+  //拖放对象
+  initialize: function(drag, options) {
+	this.Drag = document.getElementById(drag);//拖放对象
+	this._x = this._y = 0;//记录鼠标相对拖放对象的位置
+	this._marginLeft = this._marginTop = 0;//记录margin
+	//事件对象(用于绑定移除事件)
+	this._fM = BindAsEventListener(this, this.Move);
+	this._fS = Bind(this, this.Stop);
+	
+	this.SetOptions(options);
+	
+	this.Limit = !!this.options.Limit;
+	this.mxLeft = parseInt(this.options.mxLeft);
+	this.mxRight = parseInt(this.options.mxRight);
+	this.mxTop = parseInt(this.options.mxTop);
+	this.mxBottom = parseInt(this.options.mxBottom);
+	
+	this.LockX = !!this.options.LockX;
+	this.LockY = !!this.options.LockY;
+	this.Lock = !!this.options.Lock;
+	
+	this.onStart = this.options.onStart;
+	this.onMove = this.options.onMove;
+	this.onStop = this.options.onStop;
+	
+	this._Handle = document.getElementById(this.options.Handle) || this.Drag;
+	this._mxContainer = document.getElementById(this.options.mxContainer) || null;
+	
+	this.Drag.style.position = "absolute";
+
+	//透明
+	if(isIE && !!this.options.Transparent){
+		//填充拖放对象
+		with(this._Handle.appendChild(document.createElement("div")).style){
+			width = height = "100%"; backgroundColor = "#fff"; filter = "alpha(opacity:0)"; fontSize = 0;
+		}
+	}
+	//修正范围
+	this.Repair();
+	addEventHandler(this._Handle, "mousedown", BindAsEventListener(this, this.Start));
+  },
+  //设置默认属性
+  SetOptions: function(options) {
+	this.options = {//默认值
+		Handle:			"",//设置触发对象（不设置则使用拖放对象）
+		Limit:			false,//是否设置范围限制(为true时下面参数有用,可以是负数)
+		mxLeft:			0,//左边限制
+		mxRight:		9999,//右边限制
+		mxTop:			0,//上边限制
+		mxBottom:		9999,//下边限制
+		mxContainer:	"",//指定限制在容器内
+		LockX:			false,//是否锁定水平方向拖放
+		LockY:			false,//是否锁定垂直方向拖放
+		Lock:			false,//是否锁定
+		Transparent:	false,//是否透明
+		onStart:		function(){},//开始移动时执行
+		onMove:			function(){},//移动时执行
+		onStop:			function(){}//结束移动时执行
+	};
+	Extend(this.options, options || {});
+  },
+  //准备拖动
+  Start: function(oEvent) {
+	if(this.Lock){ return; }
+	this.Repair();
+	//让点击的元素显示在最外面
+	this.Drag.style.zIndex=zindex;
+	zindex++;
+	//记录鼠标相对拖放对象的位置
+	this._x = oEvent.clientX - this.Drag.offsetLeft;
+	this._y = oEvent.clientY - this.Drag.offsetTop;
+	//记录margin
+	this._marginLeft = parseInt(CurrentStyle(this.Drag).marginLeft) || 0;
+	this._marginTop = parseInt(CurrentStyle(this.Drag).marginTop) || 0;
+	//mousemove时移动 mouseup时停止
+	addEventHandler(document, "mousemove", this._fM);
+	addEventHandler(document, "mouseup", this._fS);
+	if(isIE){
+		//焦点丢失
+		addEventHandler(this._Handle, "losecapture", this._fS);
+		//设置鼠标捕获
+		this._Handle.setCapture();
+	}else{
+		//焦点丢失
+		addEventHandler(window, "blur", this._fS);
+		//阻止默认动作
+		oEvent.preventDefault();
+	};
+	//附加程序
+	this.onStart();
+  },
+  //修正范围
+  Repair: function() {
+	if(this.Limit){
+		//修正错误范围参数
+		this.mxRight = Math.max(this.mxRight, this.mxLeft + this.Drag.offsetWidth);
+		this.mxBottom = Math.max(this.mxBottom, this.mxTop + this.Drag.offsetHeight);
+		//如果有容器必须设置position为relative或absolute来相对或绝对定位，并在获取offset之前设置
+		!this._mxContainer || CurrentStyle(this._mxContainer).position == "relative" || CurrentStyle(this._mxContainer).position == "absolute" || (this._mxContainer.style.position = "relative");
+	}
+  },
+  //拖动
+  Move: function(oEvent) {
+	//判断是否锁定
+	if(this.Lock){ this.Stop(); return; };
+	//清除选择
+	window.getSelection ? window.getSelection().removeAllRanges() : document.selection.empty();
+	//设置移动参数
+	var iLeft = oEvent.clientX - this._x, iTop = oEvent.clientY - this._y;
+	//设置范围限制
+	if(this.Limit){
+		//设置范围参数
+		var mxLeft = this.mxLeft, mxRight = this.mxRight, mxTop = this.mxTop, mxBottom = this.mxBottom;
+		//如果设置了容器，再修正范围参数
+		if(!!this._mxContainer){
+			mxLeft = Math.max(mxLeft, 0);
+			mxTop = Math.max(mxTop, 0);
+			mxRight = Math.min(mxRight, this._mxContainer.clientWidth);
+			mxBottom = Math.min(mxBottom, this._mxContainer.clientHeight);
+		};
+		//修正移动参数
+		iLeft = Math.max(Math.min(iLeft, mxRight - this.Drag.offsetWidth), mxLeft);
+		iTop = Math.max(Math.min(iTop, mxBottom - this.Drag.offsetHeight), mxTop);
+	}
+	//设置位置，并修正margin
+	if(!this.LockX){ this.Drag.style.left = iLeft - this._marginLeft + "px"; }
+	if(!this.LockY){ this.Drag.style.top = iTop - this._marginTop + "px"; }
+	//附加程序
+	this.onMove();
+  },
+  //停止拖动
+  Stop: function() {
+	//移除事件
+	removeEventHandler(document, "mousemove", this._fM);
+	removeEventHandler(document, "mouseup", this._fS);
+	if(isIE){
+		removeEventHandler(this._Handle, "losecapture", this._fS);
+		this._Handle.releaseCapture();
+	}else{
+		removeEventHandler(window, "blur", this._fS);
+	};
+	//附加程序
+	this.onStop();
+  }
+};
+
+
+</script>
+<style>
+#idContainer{ width:100%; height:300px;}
+#idHandle{cursor:move; height:25px; background:#0000FF; overflow:hidden;}
+#idHandle1{cursor:move; height:25px; background:#0000FF; overflow:hidden;}
+.wall_paste p {margin-top:30px;PADDING-RIGHT: 20px; PADDING-LEFT: 20px; PADDING-BOTTOM: 4px; OVERFLOW: hidden; COLOR: #2b2b2b; LINE-HEIGHT: 20px; PADDING-TOP: 0px;height:40%;}
+</style>
+
+<ul class="breadcrumb">
+<li><a href="/">首页</a></li>
+<li class="active">许愿墙</li>
+</ul>
+<div id="wishDiv" style="border:1px solid silver;margin-bottom:20px;"><!-- 防止许愿框 溢出 -->
+<div id="idContainer">
+	<% var random; ww.forEach(function(wish,index){ 
+	    random=Math.floor((Math.random()*-60)+1+30); %>
+		<div class="wall_paste" id="drag<%= index %>" style="border: #c1c1c1 1px solid;  BACKGROUND: url(../images/wall_icon.png) #fafcfd no-repeat left top; OVERFLOW: hidden;WIDTH: 169px; CURSOR: move; BORDER-BOTTOM: #c1c1c1 1px solid; HEIGHT: 167px;transform:rotate(<%=random %>deg) translate3d( 0, 0, 0);-webkit-transform:rotate(<%=random %>deg) translate3d( 0, 0, 0); "><%=wish.content %><span style="display:block;text-align:right;margin-right:20px;"><small><%=wish.name %></small><br/><small><%=wish.time.second %></small> </span></div>
+	<% }) %>
+</div>
+</div>
+<script type="text/javascript">
+  var getValue=document.getElementById("idContainer").innerHTML;
+  var decodeValue=getValue.replace(/&quot;/g,"\"").replace(/&lt;/g,"<").replace(/&gt;/g,">").replace(/&amp;/g, "&");
+  document.getElementById("idContainer").innerHTML=decodeValue;
+  </script>
+<input type="hidden" id="wwCount" value="<%=count %>"/>
+<!--
+<input id="idReset" type="button" value="复位" />
+<input id="idLock" type="button" value="锁定" />
+<input id="idLockX" type="button" value="锁定水平" />
+<input id="idLockY" type="button" value="锁定垂直" />
+<input id="idLimit" type="button" value="范围锁定" />
+<input id="idLimitOff" type="button" value="取消范围锁定" />
+<br />拖放状态：<span id="idShow">未开始</span>
+-->
+<script>
+document.getElementById("wishDiv").style.padding=169*Math.cos(30)+'px';//防止许愿框 溢出
+//document.getElementById("wishDiv").style.paddingBottom=169*Math.cos(30)+'px';
+//防止许愿框 溢出
+var num=document.getElementById('wwCount').value;
+for(i=0;i<num;i++)
+{
+	document.getElementById("drag"+i).style.left=new Number(Math.random() * (document.getElementById('idContainer').offsetWidth-document.getElementById("drag"+i).offsetWidth)).toFixed(0)+'px';
+	document.getElementById("drag"+i).style.top=new Number(Math.random() * (document.getElementById('idContainer').offsetHeight-document.getElementById("drag"+i).offsetHeight)).toFixed(0)+'px';
+	var drag = new Drag("drag"+i, { mxContainer: "idContainer", Handle: "drag"+i, Limit: true,
+		//onStart: function(){document.getElementById("idShow").innerHTML="开始拖放" ; },
+		//onMove: function(){ document.getElementById("idShow").innerHTML = "left："+this.Drag.offsetLeft+"；top:"+this.Drag.offsetTop; },
+		//onStop: function(){ document.getElementById("idShow").innerHTML = "结束拖放"; }
+	});
+}
+/*document.getElementById("idReset").onclick = function(){
+	drag.Limit = true;
+	drag.mxLeft = drag.mxTop = 0;
+	drag.mxRight = drag.mxBottom = 9999;
+	drag.LockX = drag.LockY = drag.Lock = false;
+}
+
+document.getElementById("idLock").onclick = function(){ drag.Lock = true; }
+document.getElementById("idLockX").onclick = function(){ drag.LockX = true; }
+document.getElementById("idLockY").onclick = function(){ drag.LockY = true; }
+document.getElementById("idLimit").onclick = function(){	 drag.mxRight = drag.mxBottom = 200;drag.Limit = true; }
+document.getElementById("idLimitOff").onclick = function(){ drag.Limit = false; }     */
+</script>
+
+<link rel="stylesheet" href="/kindeditor/default/default.css" />
+<script charset="utf-8" src="/kindeditor/kindeditor-min.js"></script>
+<script charset="utf-8" src="/kindeditor/zh_CN.js"></script>
+<script>
+  var editor;
+  KindEditor.ready(function(K) {
+    editor = K.create('textarea[name="wwContent"]', {
+          resizeType : 1,
+          allowPreviewEmoticons : false,
+          allowImageUpload : false,
+          items : [
+            'fontname', 'fontsize', '|', 'forecolor', 'hilitecolor', 'bold', 'italic', 'underline',
+            'removeformat', '|', 'emoticons',  'link']
+        });
+      });
+</script>
+<form method="post" action="/wishingWall" style="width:60%;">
+<textarea name="wwContent" style="width:100%;height:200px;visibility:hidden;"></textarea>
+<button type="submit" class="btn btn-success pull-right" style="margin-top:20px;"><i class="icon-comment icon-write"></i> 许愿</button>
+</form>

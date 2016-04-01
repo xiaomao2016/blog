@@ -1,0 +1,72 @@
+<br/>
+<div id="commentContent">
+<% comments.forEach(function(comment, index){ %>
+<div style="padding-left:4em">
+<table style="width:100%" class="table">
+  <tr>
+  	<td rowspan="2" style="width:20%">
+      <img src="/images/user/<%=comment.user.imgPath %>" style="width:50px;height:50px" />
+    </td>
+	  <td style="width:80%">
+      <input type="hidden" name="yijiComment" value="<%=comment.id %>">
+      <p><a href="/u/<%= comment.user.name %>"><%= comment.user.name %></a>&emsp;<%= comment.time  %>
+      <span style="float:right;clear:left;"><a href="javascript:void(0)" class="reply">回复</a></span>
+      </p>
+      <%= comment.comment %>
+    </td>
+  </tr>
+</table>
+
+</div>
+      <% if (comment.replies2.length >0) {  %>
+        <%- partial('comment2',{reply2: comment.replies2,parentId:comment.id,user:user}) %>
+      <% } %>
+<% }) %>
+</div>
+
+  <script type="text/javascript">
+  var getValue=document.getElementById("commentContent").innerHTML;
+  var decodeValue=getValue.replace(/&quot;/g,"\"").replace(/&lt;/g,"<").replace(/&gt;/g,">").replace(/&amp;/g, "&");
+  document.getElementById("commentContent").innerHTML=decodeValue;
+
+  $('.reply').click(function(){
+  if($(this).text()=="取消回复"){
+    $(this).text('回复');
+    $(this).parents('div').first().find('form').remove();
+  }else {
+        $('#commentContent').find('form').remove();
+        $('.reply').text('回复');
+        $('.reply2').text('回复');
+        $(this).text('取消回复');
+        var cid=$(this).parents('td').find('input').val();
+        if(categoryid){
+            $(this).parents('div').first().append('<form method="post" action="/comment"><input type="hidden" value="<%= postId %>" name="postId"/><input type="hidden" name="commentId" value='+cid+'><textarea style="width:100%" name="comment"></textarea><input id="categoryname" name="categoryname" value="<%=categoryname %>" type="hidden"><input id="categoryid" name="categoryid" value="<%=categoryid %>" type="hidden"><input id="flag" name="flag" type="hidden" value=2 ><button type="submit" class="btn btn-success btn-xs pull-right" style="margin-top:5px;margin-bottom:5px;"><i class="icon-comment icon-write"></i> 回复</button></form>');
+        }else{
+             $(this).parents('div').first().append('<form method="post" action="/comment"><input type="hidden" value="<%= postId %>" name="postId"/><input type="hidden" name="commentId" value='+cid+'><textarea style="width:100%" name="comment"></textarea><input id="categoryname" name="categoryname" value="<%=categoryname %>" type="hidden"><input id="categoryid" name="categoryid" value="<%=categoryid %>" type="hidden"><input id="flag" name="flag" type="hidden" value=1 ><button type="submit" class="btn btn-success btn-xs pull-right" style="margin-top:5px;margin-bottom:5px;"><i class="icon-comment icon-write"></i> 回复</button></form>');
+        }
+        initKindEditor('textarea[name="comment"]');
+        //$(this).parents('div').first().find('form').show(1500);
+    }
+  });
+  $('.reply2').click(function(){
+  if($(this).text()=="取消回复"){
+      $(this).text('回复');
+      $(this).parents('div').first().find('form').remove();
+    }else {
+        $('#commentContent').find('form').remove();
+        $('.reply').text('回复');
+        $('.reply2').text('回复');
+        $(this).text('取消回复');
+        var cid=$(this).parents('td').find('input[name="parentId"]').val();
+        var parentName=$(this).parents('td').find('input[name="parentName"]').val();
+        if(categoryid){
+         $(this).parents('div').first().append('<form method="post" action="/comment2"><input type="hidden" value="<%= postId %>" name="postId"/><input type="hidden" name="commentId" value='+cid+'><input type="hidden" name="parentName2" value='+parentName+'><textarea style="width:100%" name="comment"></textarea><input id="categoryname" name="categoryname" value="<%=categoryname %>" type="hidden"><input id="categoryid" name="categoryid" value="<%=categoryid %>" type="hidden"><input id="flag" name="flag" type="hidden" value=2 ><button type="submit" class="btn btn-success btn-xs pull-right" style="margin-top:5px;margin-bottom:5px;"><i class="icon-comment icon-write"></i> 回复</button></form>');
+         }else{
+            $(this).parents('div').first().append('<form method="post" action="/comment2"><input type="hidden" value="<%= postId %>" name="postId"/><input type="hidden" name="commentId" value='+cid+'><input type="hidden" name="parentName2" value='+parentName+'><textarea style="width:100%" name="comment"></textarea><input id="categoryname" name="categoryname" value="<%=categoryname %>" type="hidden"><input id="categoryid" name="categoryid" value="<%=categoryid %>" type="hidden"><input id="flag" name="flag" type="hidden" value=1 ><button type="submit" class="btn btn-success btn-xs pull-right" style="margin-top:5px;margin-bottom:5px;"><i class="icon-comment icon-write"></i> 回复</button></form>');
+         }
+        initKindEditor('textarea[name="comment"]');
+        //$(this).parents('div').first().find('form').show(1500);
+    }
+  });
+  </script>
+  <%- include commentSay %>

@@ -1,0 +1,32 @@
+<script>
+	function addCategory(){
+		$('#categoryModal').modal({
+			keyboard:true,
+			show:true,
+			backdrop:'static'
+		});
+		//初始化Modal
+		$('#categoryForm').attr('action','/category');
+		$('#categoryTitle').text('增加分类');
+		$('#categoryName').val('');
+	}
+</script>
+<table>
+	<thead>
+		<th>分类名</th>
+		<th>操作</th>
+	</thead>
+	<tbody>
+		<% categories.forEach(function(category){ %>
+			<tr>
+				<td><%= category.cname %></td>
+				<td><a href="#">修改</a>|<a href="#">删除</a></td>
+			</tr>
+		<% }) %>
+	</tbody>
+</table>
+<a href="javascript:void(0)" onclick="addCategory()">创建</a>
+<div class="modal fade" id="categoryModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+
+    <%- include categoryModal %>
+</div>

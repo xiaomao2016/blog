@@ -1,0 +1,36 @@
+<form method="post" class="form-horizontal col-md-6" action="/reg">
+    <fieldset>
+    <legend>用户注册</legend>
+	<div class="form-group">
+	    <label class="control-label" for="username">用户名</label>
+        <% if(name){ %>
+	        <input type="text"  class="form-control" id="username" name="username" value="<%=name %>">
+	    <% }else{ %>
+	         <input type="text"  class="form-control" id="username" name="username" value="">
+	    <% } %>
+		<p class="help-block">你的账户名称，用于登录和显示，长度为4-8个字符</p>
+	</div>
+	<div class="form-group">
+    	  <label class="control-label" for="email">邮箱</label>
+    	  <% if(email){ %>
+    	  <input type="email" class="form-control" id="email" name="email" value="<%=email %>">
+    	  <% }else{ %>
+    	  <input type="email" class="form-control" id="email" name="email" value="">
+    	  <% } %>
+    	  <p class="help-block">您常用的邮箱地址，用于激活帐户</p>
+    </div>
+	<div class="form-group">
+        <label class="control-label" for="password">密码</label>
+        <input type="password" class="form-control" id="password" name="password">
+        <p class="help-block">密码长度为4-8个字符</p>
+	</div>
+	<div class="form-group">
+        <label class="control-label" for="password-repeat">重复输入密码</label>
+        <input type="password"  class="form-control" id="password-repeat"
+        name="password-repeat">
+	</div>
+	<div class="form-group">
+	    <button type="submit" class="btn btn-primary">注册</button>
+	</div>
+    </fieldset>
+</form>

@@ -1,0 +1,16 @@
+body{
+    font-family:myFont, "微软雅黑", verdana, "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+@font-face
+{
+    font-family: myFont;
+    src: url('../font/SentyMarukoElementary.ttf');
+}
+@font-face
+{
+    font-family: emoji;
+    src:url('../font/Symbola.ttf');
+}
+p {
+	
+}

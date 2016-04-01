@@ -1,0 +1,62 @@
+<div class="jumbotron col-md-9" style="padding-top: 10px;padding-bottom: 5px;margin-bottom: -5px;">
+	<div>
+	 <p class="pull-left" style="font-size: 48px;">蝶恋花</p>
+	 <p class="pull-left" style="font-size: 16px;padding-top:10px; ">衣带渐宽终不悔 <br>为伊消得人憔悴</p>
+     <p class="pull-right"  style="font-size:14px;color: #428BCA;font-weight:bold;height: 70px;line-height: 70px;">总帖数<span class="badge"><%= totals %></span></p>
+	 </div>
+	 <!--<div id="divPoem" class="pull-right" >
+		<pre>
+
+	伫倚危楼风细细，
+	望极春愁，黯黯生天际。
+	草色烟光残照里，
+	无言谁会凭阑意。
+	拟把疏狂图一醉，
+	对酒当歌，强乐还无味。
+	衣带渐宽终不悔，
+	为伊消得人憔悴。
+			  柳永    
+		</pre> 
+	</div>-->
+</div>
+<div style="clear: both;"></div>
+<div class="col-md-9">
+	<p style="text-align:right;"><span class="label label-important">Hot</span></p>
+    <table style="margin-top:10px;" class="table table-condensed">
+        <% posts.forEach(function(post){ %>
+        <tr style="vertical-align:top">
+            <td style="width:20%"><img src="/images/user/<%= post.user.imgPath %>" style="width:50px;height:50px;"/>
+            </td>
+            <td style="width:70%">
+                <p style="line-height:25px;height:25px;"><a
+                            href="/postOne?id=<%= post.id %>&categoryname=<%= title %>&categoryid=<%= categoryid %>&flag=2"><%= post.title %></a><br/>
+                    <small><%= post.user.name %></small>
+                    发表于
+                    <small><%= post.time %></small>
+                </p>
+            </td>
+            <td style="vertical-align:middle;width:10%;">
+                <p><span class="label label-info"><%= post.pv %></span></p>
+            </td>
+        </tr>
+        <% }) %>
+    </table>
+  	<!--<table style="margin-top:10px;table-layout:fixed;" class="table table-condensed">
+	<% posts.forEach(function(post, index) { %>
+
+  	<tr style="vertical-align:top" >
+  		<td style="text-overflow:ellipsis;width:70%;overflow: hidden;white-space: nowrap;"><a href="/postOne?id=<%= post.id %>"><%= post.title %></a></td>
+  	<td style="text-overflow:ellipsis;width:30%;overflow: hidden;white-space:nowrap;">
+  		 	<p><small><%= post.time.second %></small></p>
+  		</td> 
+  		<td style="width:10%;">
+  		 	<p><small><%= post.pv %></small></p>
+  		</td>
+  		<td style="width:30%;">
+  		 	<%= post.user.name %>
+  		</td>
+  	</tr>
+	<%}) %>
+	</table>-->
+    <%- include pagination.ejs %>
+</div>

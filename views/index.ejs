@@ -1,0 +1,126 @@
+<div class="row">
+    <div class="col-md-9">
+        <div>
+            <p><span style="font-size:16px;">Hello World,I'm a developer and I'm happy now!</span>
+            </p>
+        </div>
+        <div style="margin-top:5px;" class="clearfix">
+            <% categories.forEach(function(category){ %>
+            <div style="width:20%;float:left;padding:5px 10px;">
+                <img src="/images/<%= category.cimgname %>" alt="">
+
+                <div style="float:right;">
+                    <span style="font-size:16px;"><strong><a
+                                    href="/categoryShow?categoryid=<%= category.cid %>&categoryname=<%= category.cname %>"><%= category.cname %></a></strong></span>
+                    <br>
+                    <span class="badge"><%= category.cnum %></span>
+                </div>
+                <p><%= category.cdesc %></p>
+            </div>
+
+            <% }) %>
+
+            <!--
+            <div style="float:left;margin-left:10px;">
+                <ul class="thumbnails">
+                  <li class="span2">
+                    <div class="thumbnail">
+                      <img style="float:left;margin-right:5px;" src="/images/life.jpeg" alt="">
+                      <h3><a href="#">生<br>活</a></h3>
+                      <p>Thumbnail caption...</p>
+                    </div>
+                  </li>
+                </ul>
+            </div>
+            <div style="float:left;margin-left:10px;">
+                <ul class="thumbnails">
+                  <li class="span2">
+                    <div class="thumbnail">
+                      <img style="float:left;margin-right:5px;" src="/images/entertainment.jpeg" alt="">
+                      <h3><a href="#">娱<br>乐</a></h3>
+                      <p>Thumbnail caption...</p>
+                    </div>
+                  </li>
+                </ul>
+            </div>
+            <div style="float:left;margin-left:10px;">
+                <ul class="thumbnails">
+                  <li class="span2">
+                    <div class="thumbnail">
+                      <img style="float:left;margin-right:5px;" src="/images/emotion.jpeg" alt="">
+                      <h3><a href="#">情<br>感</a></h3>
+                      <p>Thumbnail caption...</p>
+                    </div>
+                  </li>
+                </ul>
+            </div> -->
+        </div>
+
+        <div>
+            <p>最新<a href="/allPosts" class="pull-right">浏览更多...</a></p>
+            <table id="tableIndex"  class="table table-condensed">
+                <% topTen.forEach(function(post, index) { %>
+
+                <tr style="vertical-align:middle">
+                    <td style="text-overflow:ellipsis;width:50%;overflow: hidden;white-space: nowrap;"><a
+                                href="/postOne?id=<%= post.id %>"><%= post.title %></a></td>
+                    <td style="text-overflow:ellipsis;width:20%;overflow: hidden;white-space:nowrap;">
+                            <small><span class="glyphicon glyphicon-time"></span></small> <%= post.time %>
+                    </td>
+                    <td style="width:10%;">
+                            <small><span class="glyphicon glyphicon-eye-open"></span></small> <%= post.pv %>
+                    </td>
+                    <td style="width:20%;">
+                            <small><span class="glyphicon glyphicon-user"></span></small> <%= post.user.name %>
+                    </td>
+                </tr>
+                <% }) %>
+            </table>
+
+        </div>
+    </div>
+    <div class="col-md-3" style="background-color: #EEEEFF;padding:0px;">
+        <div class="divAside" style="margin-top: 0px;">
+            <p>本周最热：</p>
+            <table style="margin-top:10px;table-layout:fixed" class="table table-condensed">
+                <% hotPosts.forEach(function(post, index) { %>
+
+                <tr style="vertical-align:top">
+                    <td style="text-overflow:ellipsis;width:100%;overflow: hidden;white-space: nowrap;"><a
+                                href="/postOne?id=<%= post.id %>"><%= post.title %></a></td>
+                    <!--<td style="text-overflow:ellipsis;width:30%;overflow: hidden;white-space:nowrap;">
+              		 	<p><small><%= post.time.second %></small></p>
+              		</td>
+              		<td style="width:10%;">
+              		 	<p><small><%= post.pv %></small></p>
+              		</td>
+              		<td style="width:30%;">
+              		 	<p><small><%= post.user %></small></p>
+              		</td>   -->
+                </tr>
+                <% }) %>
+            </table>
+        </div>
+        <div id="divAD" class="divAside">
+            <p> 广告位招租： </p>
+
+            <p>天上会掉下个林妹妹吗？</p>
+
+        </div>
+        <div id="divNewsHot" class="divAside">
+            <p>最热新闻</p>
+            <p><span>夏</span>天来了<!--emoji:<span style="font-family: emoji;font-size:40px;">&#128369;&#127010;&#127011;&#127012;&#127013;</span>--></p>
+            <p>花开堪折直须折，莫待无花空折枝！</p>
+
+        </div>
+        <div class="divAside">
+            <p>我的状态：HP=50%</p>
+            <p>都是浮云</p>
+
+
+        </div>
+        <div>
+            <div style="clear:both"></div>
+        </div>
+    </div>
+

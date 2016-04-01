@@ -1,0 +1,37 @@
+<div class="row">
+    <ul class="breadcrumb">
+        <li><a href="/">首页</a></li>
+        <li class="active"><%= title %></li>
+    </ul>
+    <% if(user) { %>
+    <p class="pull-right"><a href="/say?categoryid=<%= categoryid %>&categoryname=<%= categoryname %>&flag=2">发帖</a></p>
+    <% } %>
+    <% if(categoryname == '情感'){ %>
+    <%- include emotion.ejs %>
+    <% }else if(categoryname == '技术'){ %>
+    <%- include technology.ejs %>
+    <% }else { %>
+    <div class="col-md-9">
+        <table style="margin-top:10px;" class="table table-condensed">
+            <% posts.forEach(function(post){ %>
+            <tr style="vertical-align:top">
+                <td style="width:20%"><img src="/images/user/<%= post.user.imgPath %>" style="width:50px;height:50px;"/>
+                </td>
+                <td style="width:70%">
+                    <p style="line-height:25px;height:25px;"><a
+                                href="/postOne?id=<%= post.id %>&categoryname=<%= categoryname %>&categoryid=<%= categoryid %>&flag=2"><%= post.title %></a><br/>
+                        <small><%= post.user.name %></small>
+                        发表于
+                        <small><%= post.time %></small>
+                    </p>
+                </td>
+                <td style="vertical-align:middle;width:10%;">
+                    <p><span class="label label-info"><%= post.pv %></span></p>
+                </td>
+            </tr>
+            <% }) %>
+        </table>
+        <%- include pagination.ejs %>
+    </div>
+    <% } %>
+</div>

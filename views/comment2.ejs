@@ -1,0 +1,26 @@
+<% reply2.forEach(function(comment, index){ %>
+  <div style="padding-left:8em">
+    <table style="width:100%" class="table">
+      <tr>
+      	<td rowspan="2" style="width:20%">
+          <img src="/images/user/<%=comment.name.imgPath %>" style="width:50px;height:50px" />
+        </td>
+    	  <td style="width:80%">
+          <input type="hidden" name="parentName" value="<%=comment.name.name %>">
+          <input type="hidden" name="parentId" value="<%=parentId %>"><!-- 一级回复ID -->
+          <p><a href="/u/<%= comment.name.name %>" style="color:black;"><%= comment.name.name %></a>&emsp;<%= comment.time %>
+          <% if(user) { %>
+          <span style="float:right;clear:left;"><a href="javascript:void(0)" class="reply2">回复</a></span>
+          <% } %>
+          </p>
+          <% if(comment.parentName) { %>
+            @<a href="/u/<%= comment.parentName %>"><%=comment.parentName %></a>
+            <%= comment.comment %>
+          <% } else { %>
+            <%= comment.comment %>
+          <% } %>
+        </td>
+      </tr>
+    </table>
+  </div>
+<% }) %>

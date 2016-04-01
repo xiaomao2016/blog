@@ -1,0 +1,47 @@
+
+<div class="row" id="postContent">
+<% posts.forEach(function(post, index) { %>
+
+  <div class="span12">
+  <table style="margin-top:10px;">
+  	<tr style="vertical-align:top" >
+  		<td style="width:150px;"><a href="/u/<%= post.user %>"><%= post.user %></a><br><img src="/images/1.jpg"></td>
+  		<td style="width:600px;">
+  		 	<p style="border-bottom:1px dashed silver;"><small><%= post.time %></small><br></p>
+    		<p><%= post.post %></p>
+  		</td>
+  	</tr>
+  </table>
+    
+   
+  </div>
+<%}) %>
+    <div class="span12  pagination">
+      <ul>
+         <% if((page-1)!=0){ %>
+            <li><a title="上一页" href="?p=<%= page-1 %>">上一页</a></li>
+         <% } else { %>
+            <li class="disabled"><a title="上一页" href="javascript:void(0)">上一页</a></li>
+         <% } %>
+        <% for(var i=0;i<totals/10;i++) { 
+             if((i+1)==page) {  %>
+                <li class="active"><a href="?p=<%= i+1 %>"><%= i+1 %></a></li>
+
+            <% } else { %>
+
+            <li><a href="?p=<%= i+1 %>"><%= i+1 %></a></li>
+            <%  } %>
+        <%  } %>
+        <% if(((page-1)*10+posts.length)!=totals){ %>
+           <li><a title="下一页" href="?p=<%= page+1 %>">下一页</a></li>
+        <% } else { %>
+            <li class="disabled"><a title="下一页" href="javascript:void(0)">下一页</a></li>
+        <% } %>
+      </ul>
+    </div>
+</div>
+<script type="text/javascript">
+	var getValue=document.getElementById("postContent").innerHTML;
+	var decodeValue=getValue.replace(/&quot;/g,"\"").replace(/&lt;/g,"<").replace(/&gt;/g,">").replace(/&amp;/g, "&");
+	document.getElementById("postContent").innerHTML=decodeValue;
+</script>

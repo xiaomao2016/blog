@@ -1,0 +1,52 @@
+<link rel="stylesheet" href="/kindeditor/default/default.css"/>
+<script charset="utf-8" src="/kindeditor/kindeditor-min.js"></script>
+<script charset="utf-8" src="/kindeditor/zh_CN.js"></script>
+<script>
+    var editor;
+
+    function initKindEditor(expr) {
+        KindEditor.ready(function (K) {
+            K.create(expr, {
+                themeType: 'simple',
+                allowPreviewEmoticons: false,
+                allowImageUpload: false,
+                items: [
+                    'fontname', 'fontsize', '|', 'forecolor', 'hilitecolor', 'bold', 'italic', 'underline',
+                    'removeformat', '|', 'justifyleft', 'justifycenter', 'justifyright', 'insertorderedlist',
+                    'insertunorderedlist', '|', 'emoticons', 'image', 'link', '|', 'clearhtml', 'quickformat', 'source']
+            });
+
+        });
+
+    }
+    initKindEditor('textarea[name="comment"]');
+    //KindEditor.ready(function(K) {
+    // editor = K.create('textarea[name="a"]', {
+    //      resizeType : 1,
+    //       allowPreviewEmoticons : false,
+    //       allowImageUpload : false,
+    //       items : [
+    //        'fontname', 'fontsize', '|', 'forecolor', 'hilitecolor', 'bold', 'italic', //'underline',
+    //         'removeformat', '|', 'justifyleft', 'justifycenter', 'justifyright', //'insertorderedlist',
+    //         'insertunorderedlist', '|', 'emoticons', 'image', 'link']
+    //     });
+    //  });
+</script>
+
+<div style="overflow:auto;margin-bottom:10px;clear:both;">
+    <form method="post" action="/comment">
+        <input type="hidden" value="<%= postId %>" name="postId"/>
+        <textarea name="comment" style="width:100%;height:300px;visibility:hidden;"></textarea>
+        <% if(categoryid){ %>
+        <input id="flag" name="flag" type="hidden" value=2>
+        <% }else{ %>
+        <input id="flag" name="flag" type="hidden" value=1>
+        <% } %>
+        <input id="categoryname" name="categoryname" value="<%= categoryname %>" type="hidden">
+        <input id="categoryid" name="categoryid" value="<%= categoryid %>" type="hidden">
+        <button type="submit" class="btn btn-success pull-right" style="margin-top:20px;"><i
+                    class="icon-comment icon-write"></i> 回复
+        </button>
+    </form>
+</div>
+

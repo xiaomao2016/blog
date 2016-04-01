@@ -1,0 +1,69 @@
+<script type="text/javascript" src="/javascripts/bootstrap-select.min.js"></script>
+<link rel="stylesheet" type="text/css" href="/stylesheets/bootstrap-select.min.css">
+<link rel="stylesheet" href="/kindeditor/default/default.css"/>
+<script charset="utf-8" src="/kindeditor/kindeditor-min.js"></script>
+<script charset="utf-8" src="/kindeditor/zh_CN.js"></script>
+<script>
+    var editor;
+    KindEditor.ready(function (K) {
+        editor = K.create('textarea[name="post"]', {
+            resizeType: 1,
+            allowPreviewEmoticons: false,
+            allowImageUpload: false,
+            items: [
+                'fontname', 'fontsize', '|', 'forecolor', 'hilitecolor', 'bold', 'italic', 'underline',
+                'removeformat', '|', 'justifyleft', 'justifycenter', 'justifyright', 'insertorderedlist',
+                'insertunorderedlist', '|', 'emoticons', 'image', 'link']
+        });
+    });
+</script>
+<div class="row" style="margin-top: 10px;">
+    <ul class="breadcrumb">
+        <li><a href="/">首页</a></li>
+        <li><a href="/myHome">My room</a></li>
+        <li class="active">文章修改</li>
+    </ul>
+    <form method="post" action="/postUpdate">
+        <div class="col-md-9">
+            <div class="form-inline" style="margin-bottom: 10px;">
+                <div class="form-group">
+                    <select class="form-control" name="category" id="category">
+                        <% categories.forEach(function(category){ %>
+                        <% if(categoryid == category.cid){ %>
+                        <option selected="selected" value='<%= category.cid %>'><%= category.cname %></option>
+                        <% }else{ %>
+                        <option value='<%= category.cid %>'><%= category.cname %></option>
+                        <% } %>
+
+                        <% }) %>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <% if(post.postType && post.postType == 2){ %>
+                    <input type="radio" name="optionsRadios" id="optionsRadios1" value="1">
+                    转载
+                    <input type="radio" name="optionsRadios" id="optionsRadios2" value="2" checked>
+                    原创
+                    <% }else{ %>
+                    <input type="radio" name="optionsRadios" id="optionsRadios1" value="1" checked>
+                    转载
+                    <input type="radio" name="optionsRadios" id="optionsRadios2" value="2">
+                    原创
+                    <% } %>
+                </div>
+                <div class="form-group">
+                    <input class="form-control" type="text" name="title" value="<%= post.title %>">
+                </div>
+                <input id="postID" name="postID" type="hidden" value="<%= postId %>">
+                <input id="page" name="page" type="hidden" value="<%= page %>">
+            </div>
+            <textarea name="post" style="width:100%;height:400px;visibility:hidden;"><%= post.post %></textarea>
+            <button type="submit" class="btn btn-success pull-right" style="margin-top:20px;"><i
+                        class="icon-comment icon-write"></i> 修改
+            </button>
+        </div>
+    </form>
+</div>
+<script>
+
+</script>

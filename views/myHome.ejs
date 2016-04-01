@@ -1,0 +1,37 @@
+<div class="row">
+    <ul class="breadcrumb">
+        <li><a href="/">首页</a></li>
+        <li class="active">My room</li>
+    </ul>
+    <div class="col-md-12">
+        <p id="pMyRoomTitle"><span>My room</span></p>
+    </div>
+    <div class="col-md-9">
+        <table style="margin-top:10px;table-layout:fixed" class="table table-condensed">
+            <% for(var i=0;i<posts.length;i++){ %>
+            <tr style="vertical-align:middle">
+                <td style="text-overflow:ellipsis;overflow: hidden;white-space: nowrap;"><a
+                            href="/postOne?id=<%= posts[i].id %>&view=true"><%= posts[i].title %></a></td>
+                <td style="text-overflow:ellipsis;overflow: hidden;white-space:nowrap;">
+                    <small><span class="glyphicon glyphicon-time"></span></small> <%= posts[i].time %>
+                </td>
+                <td style="">
+                    <small><span class="glyphicon glyphicon-eye-open"></span></small> <%= posts[i].pv %>
+                </td>
+                <td style="">
+                    <small><span class="glyphicon glyphicon-user"></span></small> <%= posts[i].user.name %>
+                </td>
+                <td>
+                    <small><span class="glyphicon glyphicon-search"></span></small>
+                    <a href="/postOne?id=<%= posts[i].id %>&view=true&flag=3">查看</a>
+                    <small><span class="glyphicon glyphicon-edit"></span></small>
+                    <a href="/postUpdate?id=<%= posts[i].id %>&view=true&p=<%= page %>">修改</a>
+                    <small><span class="glyphicon glyphicon-trash"></span></small>
+                    <a href="/postDelete?id=<%= posts[i].id %>&p=<%= page %>">删除</a>
+                </td>
+            </tr>
+            <% } %>
+        </table>
+        <%- include pagination %>
+    </div>
+</div>
